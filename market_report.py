@@ -1,47 +1,34 @@
-import os
-import smtplib
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
+name: Run Market Report Script
 
-# ✅ Securely fetch the email password
-EMAIL_SENDER = "your-email@gmail.com"  # Replace with your Gmail
-EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")  # Securely use GitHub Secret
+on:
+  schedule:
+    - cron: '0 3,15 * * *'  # Runs at 5 AM & 5 PM SAST (UTC+2 converted to UTC)
+  workflow_dispatch:  # Allows manual trigger
 
-if not EMAIL_PASSWORD:
-    raise ValueError("❌ ERROR: EMAIL_PASSWORD environment variable is missing! Check GitHub Secrets.")
+jobs:
+  run_script:
+    environment: Market  # ✅ Ensure secrets are pulled from the correct environment
+    runs-on: ubuntu-latest
 
-SMTP_SERVER = "smtp.gmail.com"
-SMTP_PORT = 587
-EMAIL_RECEIVER = "yeshiel@dailymaverick.co.za"
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-def send_email():
-    """Send an email with the financial infographic."""
-    msg = MIMEMultipart()
-    msg["From"] = EMAIL_SENDER
-    msg["To"] = EMAIL_RECEIVER
-    msg["Subject"] = "📊 Daily Financial Report"
+      - name: Set Up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
 
-    body = "Attached is the latest financial infographic report."
-    msg.attach(MIMEText(body, "plain"))
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
 
-    # Attach infographic (if generated)
-    with open("financial_infographic.png", "rb") as attachment:
-        from email.mime.base import MIMEBase
-        from email import encoders
-        part = MIMEBase("application", "octet-stream")
-        part.set_payload(attachment.read())
-        encoders.encode_base64(part)
-        part.add_header("Content-Disposition", f"attachment; filename=financial_infographic.png")
-        msg.attach(part)
+      - name: Run Market Report Script
+        env:
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}  # ✅ Ensure the email password is retrieved
+        run: python market_report.py
 
-    try:
-        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
-            server.starttls()
-            server.login(EMAIL_SENDER, EMAIL_PASSWORD)
-            server.sendmail(EMAIL_SENDER, EMAIL_RECEIVER, msg.as_string())
-        print("✅ Email sent successfully!")
-    except smtplib.SMTPAuthenticationError:
-        raise ValueError("❌ ERROR: SMTP Authentication failed! Check your Gmail App Password.")
-
-# Execute email sending
-send_email()
+      - name: Upload Infographic as an Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: financial-infographic
+          path: financial_infographic.png
