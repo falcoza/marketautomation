@@ -1,16 +1,16 @@
-import smtplib
 import os
+import smtplib
 from email.message import EmailMessage
 
 # Email configuration
 SMTP_SERVER = "smtp.gmail.com"
 SMTP_PORT = 587
-EMAIL_SENDER = "ypanchia@gmail.com"  # Replace with your Gmail
+EMAIL_SENDER = "ypanchia@gmail.com"  # Replace with your actual Gmail
 EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")  # Securely use GitHub Secret
 EMAIL_RECEIVER = "yeshiel@dailymaverick.co.za"
 
 def send_email():
-    if not EMAIL_PASSWORD:
+    if not EMAIL_PASSWORD or EMAIL_PASSWORD.strip() == "":
         raise ValueError("❌ ERROR: EMAIL_PASSWORD environment variable is missing! Check GitHub Secrets.")
 
     msg = EmailMessage()
@@ -21,8 +21,7 @@ def send_email():
 
     infographic_path = "final_financial_infographic.png"
     with open(infographic_path, "rb") as f:
-        file_data = f.read()
-        msg.add_attachment(file_data, maintype="image", subtype="png", filename="financial_infographic.png")
+        msg.add_attachment(f.read(), maintype="image", subtype="png", filename="financial_infographic.png")
 
     try:
         with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
@@ -34,7 +33,6 @@ def send_email():
         print(f"❌ SMTP Authentication Error: {e}")
         print("🔴 Check if your Gmail App Password is correct.")
         print("🔴 If using 2FA, generate a new App Password.")
-        print("🔴 Make sure you added EMAIL_PASSWORD correctly in GitHub Secrets.")
+        print("🔴 Make sure `EMAIL_PASSWORD` is added correctly in GitHub Secrets.")
 
-# Send the email after generating the infographic
 send_email()
