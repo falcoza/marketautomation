@@ -1,4 +1,2 @@
-      - name: Send Email
-        env:
-          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
-        run: python market_report.py
+      - name: Debug Environment Variables
+        run: echo "EMAIL_PASSWORD=${{ secrets.EMAIL_PASSWORD }}"
