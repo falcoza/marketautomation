@@ -2,7 +2,7 @@ name: Run Market Report Script
 
 on:
   schedule:
-    - cron: "0 5,17 * * *"  # Runs at 5 AM & 5 PM UTC
+    - cron: "0 3,15 * * *"  # Runs at 3 AM & 3 PM UTC (which is 5 AM & 5 PM SAST)
   workflow_dispatch:  # Allows manual triggering
 
 jobs:
@@ -19,7 +19,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          pip install yfinance pycoingecko matplotlib pandas
+          pip install yfinance pycoingecko matplotlib pandas seaborn pillow
 
       - name: Run Script
         run: python market_report.py
