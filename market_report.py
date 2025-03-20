@@ -20,15 +20,27 @@ jobs:
           python-version: '3.11'
 
       - name: Install Dependencies
-        run: pip install -r requirements.txt
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
       - name: Run Market Report Script
         env:
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}  # ✅ Ensure the email password is retrieved
-        run: python market_report.py
+        run: |
+          python market_report.py
+
+      - name: Ensure Infographic Exists
+        run: |
+          if [ ! -f financial_infographic.png ]; then
+            echo "❌ Error: financial_infographic.png was not generated!"
+            exit 1
+          fi
 
       - name: Upload Infographic as an Artifact
         uses: actions/upload-artifact@v4
         with:
           name: financial-infographic
-          path: financial_infographic.png
+          path: ./financial_infographic.png  # ✅ Explicit path
+          retention-days: 7  # ✅ Keeps artifact for 7 days
+
