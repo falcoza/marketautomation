@@ -1,0 +1,25 @@
+name: Run Market Report Script
+
+on:
+  schedule:
+    - cron: "0 5,17 * * *"  # Runs at 5 AM & 5 PM UTC
+  workflow_dispatch:  # Allows manual triggering
+
+jobs:
+  run_script:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set Up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install Dependencies
+        run: |
+          pip install yfinance pycoingecko matplotlib pandas
+
+      - name: Run Script
+        run: python market_report.py
