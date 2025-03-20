@@ -19,13 +19,26 @@ jobs:
           python-version: '3.11'
 
       - name: Install Dependencies
-        run: pip install -r requirements.txt
+        run: |
+          python -m pip install --upgrade pip
+          pip install yfinance pycoingecko matplotlib pandas seaborn pillow
 
       - name: Run Market Report Script
-        run: python market_report.py
+        run: |
+          echo "🚀 Running Market Report Script..."
+          python market_report.py
+
+      - name: Check If Infographic Exists
+        run: |
+          if [ ! -f "financial_infographic.png" ]; then
+            echo "❌ ERROR: Infographic was not generated!"
+            exit 1
+          fi
+          echo "✅ Infographic successfully created."
 
       - name: Upload Infographic as an Artifact
         uses: actions/upload-artifact@v4
         with:
           name: financial-infographic
           path: financial_infographic.png
+          retention-days: 7  # Keep the file for 7 days
