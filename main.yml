@@ -7,7 +7,7 @@ on:
 
 jobs:
   run_script:
-    environment: Market  # ✅ Ensure secrets are pulled from the correct environment
+    environment: Market  # ✅ Ensures secrets are pulled from the correct environment
     runs-on: ubuntu-latest
 
     steps:
@@ -25,7 +25,14 @@ jobs:
       - name: Run Market Report Script
         env:
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}  # ✅ Ensure the email password is retrieved
-        run: python market_report.py
+        run: |
+          python market_report.py
+          
+          # ✅ Check if the infographic was created
+          if [ ! -f financial_infographic.png ]; then
+            echo "❌ Infographic not found! Script might have failed."
+            exit 1
+          fi
 
       - name: Upload Infographic as an Artifact
         uses: actions/upload-artifact@v4
