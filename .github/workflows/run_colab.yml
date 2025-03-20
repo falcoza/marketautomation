@@ -1,0 +1,4 @@
+      - name: Send Email
+        env:
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+        run: python market_report.py
