@@ -7,7 +7,7 @@ on:
 
 jobs:
   run_script:
-    environment: Market  # ✅ Use the correct environment name where secrets are stored
+    environment: Market  # ✅ Ensure secrets are pulled from the correct environment
     runs-on: ubuntu-latest
 
     steps:
@@ -24,7 +24,7 @@ jobs:
 
       - name: Run Market Report Script
         env:
-          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}  # ✅ Ensure secrets are properly passed
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}  # ✅ Ensure the email password is retrieved
         run: python market_report.py
 
       - name: Upload Infographic as an Artifact
