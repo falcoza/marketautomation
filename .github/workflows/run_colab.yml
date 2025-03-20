@@ -1,4 +1,3 @@
       - name: Debug Secrets
-        run: echo "EMAIL_PASSWORD is set"
-        env:
-          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+        run: |
+          echo "EMAIL_PASSWORD is set? ->" ${{ secrets.EMAIL_PASSWORD }}
