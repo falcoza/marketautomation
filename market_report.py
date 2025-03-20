@@ -126,8 +126,8 @@ print("🎉 Final high-quality infographic generated: final_financial_infographi
 # Email configuration
 SMTP_SERVER = "smtp.gmail.com"
 SMTP_PORT = 587
-EMAIL_SENDER = "your-email@gmail.com"  # Replace with your Gmail
-EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")  # Securely use GitHub Secret
+EMAIL_SENDER = "ypanchia@gmail.com"  # Replace with your Gmail
+EMAIL_PASSWORD = os.getenv("GOOGLEMARKETREPORT")  # Securely use GitHub Secret
 EMAIL_RECEIVER = "yeshiel@dailymaverick.co.za"
 
 def send_email():
