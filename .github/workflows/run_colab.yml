@@ -1,8 +1,9 @@
-name: Run Market Report Script Please
+name: Run Market Report Script
 
 on:
   schedule:
     - cron: '0 3,15 * * *'  # Runs at 5 AM & 5 PM SAST (Convert to UTC)
+  workflow_dispatch:  # Allows manual trigger
 
 jobs:
   run_script:
@@ -20,8 +21,9 @@ jobs:
       - name: Install Dependencies
         run: pip install -r requirements.txt
 
-      - name: Debug Secrets
-        run: echo "EMAIL_PASSWORD is set"
+      - name: Debug Environment Variables
+        run: |
+          echo "🔍 EMAIL_PASSWORD: ${EMAIL_PASSWORD:+SET}"
         env:
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
 
