@@ -1,2 +1,4 @@
-      - name: Debug Environment Variables
-        run: echo "EMAIL_PASSWORD=${{ secrets.EMAIL_PASSWORD }}"
+      - name: Debug Secrets
+        run: echo "EMAIL_PASSWORD is set"
+        env:
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
